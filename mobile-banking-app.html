@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Bank - Mobile Banking App</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .card-gradient {
+            transition: all 0.5s ease-in-out;
+            background-size: 200% 200%;
+        }
+
+        .bank-selector-item.active {
+            background: rgba(255, 255, 255, 1);
+            font-weight: 700;
+        }
+
+        .bank-selector-item {
+            transition: all 0.2s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.4s ease-out forwards;
+        }
+
+        .transaction-item {
+            transition: all 0.2s ease;
+        }
+
+        .transaction-item:hover {
+            transform: translateX(4px);
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+
+    <!-- Main Container - Responsive -->
+    <div class="min-h-screen flex flex-col max-w-md mx-auto bg-white lg:bg-transparent lg:shadow-2xl">
+
+        <!-- Header -->
+        <header class="px-6 pt-8 pb-4 flex justify-between items-center bg-white z-10 lg:glass-effect lg:rounded-t-3xl">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                    <i class="fa-solid fa-wallet text-lg"></i>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight text-gray-900">ALL BANK</h1>
+            </div>
+            <button class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <i class="fa-solid fa-bars text-gray-600 text-xl"></i>
+            </button>
+        </header>
+
+        <!-- Scrollable Content -->
+        <main class="flex-1 overflow-y-auto no-scrollbar pb-8 bg-white">
+
+            <!-- Bank Card Section -->
+            <div class="px-6 py-2">
+                <div id="bank-card" class="relative w-full h-56 rounded-[32px] p-6 text-white shadow-xl shadow-green-200 card-gradient bg-gradient-to-br from-emerald-600 via-green-600 to-teal-600 flex flex-col justify-between overflow-hidden">
+
+                    <!-- Decorative Circles -->
+                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+                    <div class="absolute bottom-0 right-0 w-32 h-32 bg-black opacity-10 rounded-full blur-2xl"></div>
+
+                    <!-- Top Row: Label & Bank Selector -->
+                    <div class="flex justify-between items-start relative z-10">
+                        <div>
+                            <p class="text-green-100 text-sm font-medium mb-1">Available Balance</p>
+                            <h2 id="balance-display" class="text-5xl font-bold tracking-tight animate-fade-up">$54,100.00</h2>
+                        </div>
+
+                        <!-- Bank Selector -->
+                        <div class="flex flex-col gap-2 items-end">
+                            <button onclick="switchBank('ADCB')" class="bank-selector-item text-[10px] px-2 py-1 rounded-md border border-white/30 text-white hover:bg-white/20">ADCB</button>
+                            <button onclick="switchBank('RAK')" class="bank-selector-item text-[10px] px-2 py-1 rounded-md border border-white/30 text-white hover:bg-white/20">RAK</button>
+                            <button onclick="switchBank('MASHREQ')" class="bank-selector-item text-[10px] px-2 py-1 rounded-md border border-white/30 text-white hover:bg-white/20">MASHREQ</button>
+                            <button onclick="switchBank('ADIB')" class="bank-selector-item active text-[10px] px-2 py-1 rounded-md border border-white/30 text-emerald-900 bg-white">ADIB</button>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Row: Card Number -->
+                    <div class="relative z-10 mt-auto">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl tracking-widest opacity-80">••••</span>
+                            <span id="card-number" class="text-lg font-mono font-medium">1122</span>
+                            <button onclick="copyCard()" class="ml-1 p-1 hover:text-green-200 transition-colors" title="Copy Number">
+                                <i class="fa-regular fa-copy text-sm"></i>
+                            </button>
+                        </div>
+                        <!-- Pagination Dots -->
+                        <div class="flex gap-1.5 mt-2">
+                            <div class="w-6 h-1.5 bg-white rounded-full"></div>
+                            <div class="w-1.5 h-1.5 bg-white/40 rounded-full"></div>
+                            <div class="w-1.5 h-1.5 bg-white/40 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Header -->
+            <div class="px-6 mt-8 mb-4 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-900">Recent Transactions</h3>
+                <div class="flex gap-2">
+                    <button class="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                        Filter <i class="fa-solid fa-chevron-down text-[10px] ml-1"></i>
+                    </button>
+                    <button class="px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Transactions List -->
+            <div class="px-6 space-y-4" id="transaction-list">
+
+                <!-- Item 1 - Amazon (Highlighted) -->
+                <div class="flex items-center justify-between transaction-item p-3 rounded-xl cursor-pointer border-2 border-green-500 bg-green-50">
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Amazon</h4>
+                            <p class="text-xs text-gray-500 mt-0.5">Debit Card • ADCB</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-red-500 text-sm">-$200.00</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">15 Mar 2025</p>
+                    </div>
+                </div>
+
+                <!-- Item 2 - Lulu Hypermarket -->
+                <div class="flex items-center justify-between transaction-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Lulu Hypermarket</h4>
+                            <p class="text-xs text-gray-500 mt-0.5">Bank Transfer • RAK</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-red-500 text-sm">-$1,000.00</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">3 Sept 2025</p>
+                    </div>
+                </div>
+
+                <!-- Item 3 - Apple Inc. -->
+                <div class="flex items-center justify-between transaction-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Apple Inc.</h4>
+                            <p class="text-xs text-gray-500 mt-0.5">Salary Deposit • ADCB</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-green-500 text-sm">+$1,900.00</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">3 May 2024</p>
+                    </div>
+                </div>
+
+                <!-- Item 4 - Electric Company -->
+                <div class="flex items-center justify-between transaction-item p-3 rounded-xl cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Electric Company</h4>
+                            <p class="text-xs text-gray-500 mt-0.5">Utility Payment</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-red-500 text-sm">-$125.50</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">1 Mar 2025</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Info -->
+            <div class="px-6 mt-8 mb-4 text-center">
+                <p class="text-xs text-gray-400">Double click to interact</p>
+            </div>
+
+        </main>
+
+    </div>
+
+    <script>
+        function switchBank(bank) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.bank-selector-item').forEach(btn => {
+                btn.classList.remove('active', 'bg-white', 'text-emerald-900');
+                btn.classList.add('text-white');
+            });
+
+            // Add active class to clicked button
+            event.target.classList.add('active', 'bg-white', 'text-emerald-900');
+            event.target.classList.remove('text-white');
+
+            // Update card color based on bank
+            const card = document.getElementById('bank-card');
+            const gradients = {
+                'ADCB': 'from-blue-600 via-indigo-600 to-purple-600',
+                'RAK': 'from-red-600 via-orange-600 to-amber-600',
+                'MASHREQ': 'from-purple-600 via-pink-600 to-rose-600',
+                'ADIB': 'from-emerald-600 via-green-600 to-teal-600'
+            };
+
+            // Remove all gradient classes
+            Object.values(gradients).forEach(g => {
+                card.classList.remove(...g.split(' '));
+            });
+
+            // Add new gradient
+            card.classList.add(...gradients[bank].split(' '));
+        }
+
+        function copyCard() {
+            const cardNumber = document.getElementById('card-number').textContent;
+            navigator.clipboard.writeText(cardNumber);
+
+            // Visual feedback
+            event.target.innerHTML = '<i class="fa-solid fa-check text-sm"></i>';
+            setTimeout(() => {
+                event.target.innerHTML = '<i class="fa-regular fa-copy text-sm"></i>';
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>
